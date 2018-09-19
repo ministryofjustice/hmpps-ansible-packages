@@ -1,0 +1,10 @@
+---
+# vars file for hmpps-packages
+
+
+base_packages:
+  - vim
+
+flagged_packages:
+  - *-devel
+  - *-header

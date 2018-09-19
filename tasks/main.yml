@@ -1,0 +1,15 @@
+---
+
+- name: Load our base vars into memory
+  include_vars: "{{ galaxy_root }}/vars/main.yml"
+  name: base_vars
+
+- name: Install our oracle-jdk from s3
+  include: install-jdk.yml
+  when: install_jdk|default(false)
+
+- name: Manage our base packages
+  include: manage-packages.yml
+  vars:
+    flagged_packages: "{{ base_vars.flagged_packages }}"
+    base_packages: "{{ base_vars.base_packages }}"
