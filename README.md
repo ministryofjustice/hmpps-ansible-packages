@@ -8,10 +8,10 @@ Role Variables
 --------------
 
 ```yaml
-install_jdk: boolean #default false
+install_jdk: true
 # If we're installing java then the below can be set
-java_home: path #default /etc/java
-java_version: string #default
+java_home: /usr/java
+java_version: 8u181
 
 system_installer:  
    packages:
