@@ -9,7 +9,7 @@
   when: install_jdk|default(false)
 
 - name: Manage our base packages
-  include: manage-packages.yml
+  include: manage_packages.yml
   vars:
     flagged_packages: "{{ base_vars.flagged_packages }}"
     base_packages: "{{ base_vars.base_packages }}"
