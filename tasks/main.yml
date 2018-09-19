@@ -5,7 +5,7 @@
   name: base_vars
 
 - name: Install our oracle-jdk from s3
-  include: install-jdk.yml
+  include: install_jdk.yml
   when: install_jdk|default(false)
 
 - name: Manage our base packages

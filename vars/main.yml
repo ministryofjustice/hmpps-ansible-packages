@@ -1,8 +1,7 @@
 ---
-# vars file for hmpps-packages
+# vars file for hmpps-ansible-packages
 
-
-base_packages:
+Okbase_packages:
   - vim
 
 flagged_packages:
