@@ -8,7 +8,7 @@
     - name: Get oracle jdk
       aws_s3:
         bucket: "{{ artifact_bucket }}"
-        object: "/alfresco/jdk-{{ java_version|default('8u181') }}-linux-x64.rpm"
+        object: "/jdk/jdk-{{ java_version|default('8u181') }}-linux-x64.rpm"
         dest: "/tmp/jdk-{{ java_version|default('8u181') }}-linux-x64.rpm"
         mode: get
 
