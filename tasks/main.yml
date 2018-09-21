@@ -1,8 +1,9 @@
 ---
 
 - name: Load our base vars into memory
-  include_vars: "{{ galaxy_root }}/vars/main.yml"
-  name: base_vars
+  include_vars:
+    file: main.yml
+    name: base_vars
 
 - name: Install our oracle-jdk from s3
   include: install_jdk.yml
