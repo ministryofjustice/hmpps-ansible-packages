@@ -1,0 +1,96 @@
+---
+
+- name: Set our java facts
+  set_fact:
+    java_home: "{{ java_home|default('/usr/java') }}"
+
+- block:
+    - name: Get oracle jdk
+      aws_s3:
+        bucket: "{{ artifact_bucket }}"
+        object: "/alfresco/jdk-{{ java_version|default('8u181') }}-linux-x64.rpm"
+        dest: "/tmp/jdk-{{ java_version|default('8u181') }}-linux-x64.rpm"
+        mode: get
+
+    - name: Install oracle java
+      yum:
+        name: "/tmp/jdk-{{ java_version|default('8u181') }}-linux-x64.rpm"
+        state: present
+
+    - name: Remove our installer
+      file:
+        path: "/tmp/jdk-{{ java_version|default('8u181') }}-linux-x64.rpm"
+        state: absent
+  when: ansible_os_family == "RedHat"
+
+- block:
+    - name: Create our Java install dir
+      file:
+        state: directory
+        path: "{{ java_home }}"
+
+    - name: Get oracle jdk
+      aws_s3:
+        bucket: "{{ artifact_bucket }}"
+        object: "/alfresco/jdk-{{ java_version|default('8u181') }}-linux-x64.tar.gz"
+        dest: "{{ java_home }}/jdk-{{ java_version|default('8u181') }}-linux-x64.tar.gz"
+        mode: get
+
+    - name: Uncompress our installer
+      unarchive:
+        src: "{{ java_home }}/jdk-{{ java_version|default('8u181') }}-linux-x64.tar.gz"
+        remote_src: no
+        dest:
+
+    - name: Find our installation directory
+      find:
+        paths: "{{ java/home }}"
+        filetype: directory
+        contains: "^jdk-"
+      register: jdk_paths
+
+    - name: symlink our installed dir to latest
+      file:
+        src: jdk_paths.files.0.path
+        dest: "{{ java_home }}/latest"
+        state: link
+
+    - name: Remove our installer
+      file:
+        path: "{{ java_home }}//tmp/jdk-{{ java_version|default('8u181') }}-linux-x64.tar.gz"
+        state: absent
+
+  when: ansible_os_family == "Debian"
+
+
+- block:
+    - name: Set our profile file
+      set_fact:
+        profile_file: "{{ ansible_env.HOME }}/.profile"
+  when: ansible_os_family == "Debian"
+
+- block:
+    - name: Set our profile file
+      set_fact:
+        profile_file: "{{ ansible_env.HOME }}/.bash_profile"
+  when: ansible_os_family == "RedHat"
+
+- name: Ensure we have a bash profile
+  file:
+    path: "{{ profile_file }}"
+    state: touch
+  changed_when: false
+
+- name: Set java home
+  lineinfile:
+   dest: "{{ profile_file }}"
+   regexp: "{{ item.regexp }}"
+   line: "{{ item.line }}"
+   insertbefore: "export PATH"
+  with_items:
+    - regexp: ^JAVA_HOME=
+      line: "JAVA_HOME={{ java_home }}/latest"
+    - regexp: ^PATH=\$JAVA_HOME/bin
+      line: PATH=$JAVA_HOME/bin:$PATH
+    - regexp: ^export JAVA_HOME
+      line: export JAVA_HOME

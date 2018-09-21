@@ -1,0 +1,40 @@
+---
+
+- name: Remove flagged packages
+  package:
+    name: "{{ item }}"
+    state: absent
+  with_items: "{{ flagged_packages }}"
+  when: flagged_packages|default(false)
+
+- block:
+    - name: Install/upgrade the epel repo from remote
+      yum:
+        name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+        state: latest
+
+    - name: Update our system
+      yum:
+        name: '*'
+        state: latest
+  when: ansible_os_family == "RedHat"
+
+- block:
+    - name: Update all our packages
+      apt:
+        name: '*'
+        state: latest
+  when: ansible_os_family == "Debian"
+
+- name: Install required common packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ common_packages }}"
+
+- name: Install required system packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ system_packages }}"
+
