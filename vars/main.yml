@@ -5,5 +5,5 @@ Okbase_packages:
   - vim
 
 flagged_packages:
-  - *-devel
-  - *-header
+  - '*-devel'
+  - '*-header'
