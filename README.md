@@ -14,7 +14,8 @@ java_home: /usr/java
 java_version: 8u181
 artifact_bucket: s3_bucket_name
 
-system_installer:  
+# The variables below are passed in from the playbook
+system:  
    packages:
     - list
     - of 

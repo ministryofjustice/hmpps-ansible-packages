@@ -12,5 +12,6 @@
 - name: Manage our base packages
   include: manage_packages.yml
   vars:
-    flagged_packages: "{{ base_vars.flagged_packages }}"
-    base_packages: "{{ system.packages }}"
+    flagged_packages: "{{ base_vars.flagged_packages|default([]) }}"
+    common_packages: "{{ base_vars.common_packages|default([]) }}"
+    system_packages: "{{ system.packages|default([]) }}"
