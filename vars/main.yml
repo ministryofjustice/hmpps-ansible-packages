@@ -3,6 +3,7 @@
 
 base_packages:
   - vim
+  - unzip
 
 flagged_packages:
   - '*-devel'
