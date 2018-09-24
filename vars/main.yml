@@ -4,6 +4,7 @@
 base_packages:
   - vim
   - unzip
+  - tree
 
 flagged_packages:
   - '*-devel'
