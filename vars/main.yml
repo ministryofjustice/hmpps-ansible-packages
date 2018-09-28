@@ -1,7 +1,8 @@
 ---
 # vars file for hmpps-ansible-packages
 
-base_packages:
+common_packages:
+  - deltarpm
   - vim
   - unzip
   - tree
