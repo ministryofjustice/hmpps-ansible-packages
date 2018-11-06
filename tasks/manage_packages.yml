@@ -47,8 +47,8 @@
         name: "{{ common_packages }}"
         state: latest
 
-    - apt: Install required system packages
-      yum:
+    - name: Install required system packages
+      apt:
         name: "{{ system_packages }}"
         state: latest
 
