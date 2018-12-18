@@ -1,12 +1,17 @@
 ---
 
-
 - block:
     - name: Remove flagged packages
       yum:
         name: "{{ flagged_packages}}"
         state: absent
       when: flagged_packages|default(false)
+      become: true
+
+    - name: Install package groups if needed
+      yum:
+        name: "{{ package_groups }}"
+        state: latest
       become: true
 
     - name: Install/upgrade the epel repo from remote
@@ -31,12 +36,6 @@
     - name: Install required system packages
       yum:
         name: "{{ system_packages }}"
-        state: latest
-      become: true
-
-    - name: Install package groups if needed
-      yum:
-        name: "{{ package_groups }}"
         state: latest
       become: true
 
