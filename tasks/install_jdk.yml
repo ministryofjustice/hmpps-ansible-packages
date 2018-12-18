@@ -16,6 +16,7 @@
       yum:
         name: "/tmp/jdk-{{ java_version|default('8u181') }}-linux-x64.rpm"
         state: present
+      become: true
 
     - name: Remove our installer
       file:
@@ -35,16 +36,18 @@
         object: "/alfresco/jdk-{{ java_version|default('8u181') }}-linux-x64.tar.gz"
         dest: "{{ java_home }}/jdk-{{ java_version|default('8u181') }}-linux-x64.tar.gz"
         mode: get
+      become: true
 
     - name: Uncompress our installer
       unarchive:
         src: "{{ java_home }}/jdk-{{ java_version|default('8u181') }}-linux-x64.tar.gz"
-        remote_src: no
-        dest:
+        remote_src: true
+        dest: "{{ java_home }}"
+      become: true
 
     - name: Find our installation directory
       find:
-        paths: "{{ java/home }}"
+        paths: "{{ java_home }}"
         filetype: directory
         contains: "^jdk-"
       register: jdk_paths
@@ -54,6 +57,7 @@
         src: jdk_paths.files.0.path
         dest: "{{ java_home }}/latest"
         state: link
+      become: true
 
     - name: Remove our installer
       file:

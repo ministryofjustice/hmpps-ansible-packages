@@ -7,6 +7,7 @@
 
 - name: Install our oracle-jdk from s3
   include: install_jdk.yml
+  become: true
   when: install_jdk|default(false)
 
 - name: Manage our base packages
@@ -15,3 +16,6 @@
     flagged_packages: "{{ base_vars.flagged_packages|default([]) }}"
     common_packages: "{{ base_vars.common_packages|default([]) }}"
     system_packages: "{{ system.packages|default([]) }}"
+    package_groups:  "{{ system.package_groups|default([])| map('map_format', '@^%s' ) | list }}"
+  become: true
+
