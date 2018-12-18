@@ -9,9 +9,9 @@
       become: true
 
     - name: Install package groups if needed
-      yum:
-        name: "{{ package_groups }}"
-        state: latest
+      command: "yum group install -y {{ package_groups| join(' ') }}"
+      args:
+        warn: false
       become: true
 
     - name: Install/upgrade the epel repo from remote
