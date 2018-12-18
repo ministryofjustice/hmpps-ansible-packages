@@ -8,19 +8,22 @@
       when: flagged_packages|default(false)
       become: true
 
-    - name: Convert yum groups
-      command: yum groups mark convert
-      args:
-        warn: false
-      become: true
+    - block:
+        - name: Convert yum groups
+          command: yum groups mark convert
+          args:
+            warn: false
+          become: true
 
-    - name: Install package groups if needed
-      command: "yum group install -y
-                {{ package_groups| join(' ') }}
-                --setopt=group_package_types=mandatory,default,optional"
-      args:
-        warn: false
-      become: true
+
+        - name: Install package groups if needed
+          command: "yum group install -y
+                    {{ package_groups| join(' ') }}
+                    --setopt=group_package_types=mandatory,default,optional"
+          args:
+            warn: false
+          become: true
+      when: package_groups|default([])|length > 1
 
     - name: Install/upgrade the epel repo from remote
       yum:
