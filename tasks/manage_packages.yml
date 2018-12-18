@@ -7,26 +7,38 @@
         name: "{{ flagged_packages}}"
         state: absent
       when: flagged_packages|default(false)
+      become: true
 
     - name: Install/upgrade the epel repo from remote
       yum:
         name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
         state: latest
+      become: true
 
     - name: Update our system
       yum:
         name: '*'
         state: latest
+      become: true
+
 
     - name: Install required common packages
       yum:
         name: "{{ common_packages }}"
         state: latest
+      become: true
 
     - name: Install required system packages
       yum:
         name: "{{ system_packages }}"
         state: latest
+      become: true
+
+    - name: Install package groups if needed
+      yum:
+        name: "{{ package_groups }}"
+        state: latest
+      become: true
 
   when: ansible_os_family == "RedHat"
 
@@ -36,21 +48,24 @@
         name: "{{ flagged_packages }}"
         state: absent
       when: flagged_packages|default(false)
+      become: true
 
     - name: Update all our packages
       apt:
         name: '*'
         state: latest
+      become: true
 
     - name: Install required common packages
       apt:
         name: "{{ common_packages }}"
         state: latest
+      become: true
 
     - name: Install required system packages
       apt:
         name: "{{ system_packages }}"
         state: latest
+      become: true
 
   when: ansible_os_family == "Debian"
-
