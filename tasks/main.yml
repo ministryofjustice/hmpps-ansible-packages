@@ -18,4 +18,3 @@
     system_packages: "{{ system.packages|default([]) }}"
     package_groups:  "{{ system.package_groups|default([])| map('map_format', '@%s' ) | list }}"
   become: true
-
