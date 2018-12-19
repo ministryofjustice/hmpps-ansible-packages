@@ -5,12 +5,14 @@
     name: google-chrome
     description: google-chrome
     baseurl: http://dl.google.com/linux/chrome/rpm/stable/$basearch
+    gpgkey: https://dl-ssl.google.com/linux/linux_signing_key.pub
   become: true
 
 - name: Install google chrome
   yum:
     name: "google-chrome-stable{{ chrome_version|default('') }}"
     state: present
+    update_cache: true
   become: true
 
 - block:
