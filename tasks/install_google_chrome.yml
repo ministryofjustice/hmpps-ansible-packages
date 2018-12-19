@@ -1,0 +1,35 @@
+---
+
+- name: Add our official google chrome repo
+  yum_repository:
+    name: google-chrome
+    description: google-chrome
+    baseurl: http://dl.google.com/linux/chrome/rpm/stable/$basearch
+    gpgkey: https://dl-ssl.google.com/linux/linux_signing_key.pub
+  become: true
+
+- name: Import repo GPG key
+  rpm_key:
+    key: https://dl-ssl.google.com/linux/linux_signing_key.pub
+    state: present
+  become: true
+
+- name: Install google chrome
+  yum:
+    name: "google-chrome-stable{{ chrome_version|default('') }}"
+    state: present
+    update_cache: true
+  become: true
+
+- block:
+    - name: Download and unpack chromedriver
+      unarchive:
+        src: "https://chromedriver.storage.googleapis.com/{{ chromedriver_version }}/chromedriver_linux64.zip"
+        dest: /usr/bin
+        owner: root
+        group: root
+        mode: "u+rwx"
+        remote_src: true
+      become: true
+
+  when: install_chrome_driver|default(false)
