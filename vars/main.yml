@@ -6,6 +6,7 @@ common_packages:
   - vim
   - unzip
   - tree
+  - jq
 
 flagged_packages:
   - '*-devel'
