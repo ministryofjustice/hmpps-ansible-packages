@@ -1,4 +1,4 @@
- block:
+- block:
     - name: "Get google chrome rpm from s3"
       aws_s3:
         bucket: "{{ artifact_bucket }}"
@@ -16,7 +16,6 @@
       file:
         path: "/tmp/google-chrome-stable-{{ chrome_version|default('71.0.3578.98-1') }}.x86_64.rpm"
         state: absent
-
   when: ansible_os_family == "RedHat"
 
 - block:
